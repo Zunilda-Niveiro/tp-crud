@@ -1,6 +1,7 @@
 const { loadProducts,storeProducts } = require("../data/dbModule");
 
 const toThousand = n => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+const {validationResult} = require('express-validator');
 
 const controller = {
 	// Root - Show all products
@@ -33,7 +34,9 @@ const controller = {
 	// Create -  Method to store
 	store: (req, res) => {
 		// Do the magic
-		const (name, price, discopunt, description, category) = req.body;
+		const errors = validationResult(req)
+		if(errors.isEmpty()){
+			const {name, price, discount, description, category } = req.body;
 		let products = loadProducts();
 
 		const newProduct = {
@@ -52,12 +55,19 @@ const controller = {
 			
 		return res.redirect('/products')
 			
+		} else { return res.render('product-create-form',{
+			errors : errors.mapped(),
+			old : req.body
+		})
+
+		}
+		
 	},
 
 	// Update - Form to edit
 	edit: (req, res) => {
 		// Do the magic
-		let product = loadProducts().find(product => product.id === +req.params.id);
+		let productToEdit = loadProducts().find(product => product.id === +req.params.id);
 
 		return res.render('product-edit-form',{
 			productToEdit
@@ -66,7 +76,7 @@ const controller = {
 	// Update - Method to update
 	update: (req, res) => {
 		// Do the magic
-		const (name, price, discopunt, description, category) = req.body;
+		const {name, price, discopunt, description, category } = req.body;
 		let productsModify = loadProducts().map(product =>{
 			if(product.id === +req.params.id){
 				return {

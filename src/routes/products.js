@@ -1,6 +1,8 @@
 // ************ Require's ************
 const express = require('express');
 const router = express.Router();
+const productsValidation = require('../validations/validate-product')
+
 
 // ************ Controller Require ************
 const productsController = require('../controllers/productsController');
@@ -10,7 +12,7 @@ router.get('/', productsController.index);
 
 /*** CREATE ONE PRODUCT ***/ 
 router.get('/create/', productsController.create); 
-router.post('/store', productsController.store); 
+router.post('/store',productsValidation, productsController.store); 
 
 
 /*** GET ONE PRODUCT ***/ 
