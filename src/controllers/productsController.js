@@ -76,7 +76,7 @@ const controller = {
 	// Update - Method to update
 	update: (req, res) => {
 		// Do the magic
-		const {name, price, discopunt, description, category } = req.body;
+		const {name, price, discount, description, category } = req.body;
 		let productsModify = loadProducts().map(product =>{
 			if(product.id === +req.params.id){
 				return {
@@ -103,7 +103,7 @@ const controller = {
 		let productsModify = loadProducts().filter(product => product.id !== +req.params.id);
 
 		storeProducts(productsModify);
-		return res.redirect('products')
+		return res.redirect('/')
 	}
 };
 
